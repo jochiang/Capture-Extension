@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Content Capture & Search</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      width: 400px;
+      padding: 10px;
+    }
+    h2 {
+      margin-top: 0;
+      color: #333;
+    }
+    h4, h5 {
+      margin-top: 15px;
+      margin-bottom: 5px;
+    }
+    .tab {
+      display: none;
+    }
+    .tab-active {
+      display: block;
+    }
+    .tab-buttons {
+      display: flex;
+      margin-bottom: 15px;
+    }
+    .tab-btn {
+      flex: 1;
+      padding: 8px;
+      background: #f0f0f0;
+      border: none;
+      cursor: pointer;
+      font-size: 12px;
+    }
+    .tab-btn.active {
+      background: #4285f4;
+      color: white;
+    }
+    input[type="text"], input[type="password"] {
+      width: 70%;
+      padding: 8px;
+      margin-right: 5px;
+      margin-bottom: 10px;
+    }
+    textarea {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      font-family: Arial, sans-serif;
+    }
+    button {
+      padding: 8px 12px;
+      background: #4285f4;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #3367d6;
+    }
+    .domain-list {
+      max-height: 200px;
+      overflow-y: auto;
+      margin: 10px 0;
+    }
+    .domain-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 5px;
+      border-bottom: 1px solid #eee;
+    }
+    .remove-btn {
+      background: #f44336;
+      color: white;
+      border: none;
+      cursor: pointer;
+      padding: 2px 5px;
+    }
+    .search-results, .llm-response-container {
+      margin-top: 10px;
+      max-height: 250px;
+      overflow-y: auto;
+      border: 1px solid #eee;
+      padding: 10px;
+    }
+    .result-item {
+      padding: 10px;
+      border-bottom: 1px solid #eee;
+    }
+    .result-item h4 {
+      margin: 0 0 5px 0;
+    }
+    .result-date {
+      color: #888;
+      font-size: 0.8em;
+    }
+    .server-settings, .llm-settings, .ollama-settings, .gemini-settings {
+      margin-top: 10px;
+      padding: 10px;
+      border: 1px solid #eee;
+      border-radius: 5px;
+    }
+    .server-settings label, .llm-settings label {
+      display: block;
+      margin-bottom: 5px;
+    }
+    #server-url, #ollama-url, #ollama-model, #gemini-api-key, #gemini-model {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+    .llm-prompt-container {
+      margin: 10px 0;
+    }
+    .llm-model-selector {
+      margin: 10px 0;
+      display: flex;
+      gap: 20px;
+    }
+    .llm-response {
+      white-space: pre-wrap;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+    .loading {
+      text-align: center;
+      padding: 20px;
+      font-style: italic;
+      color: #666;
+    }
+    .content-item {
+      padding: 10px;
+      border-bottom: 1px solid #eee;
+      position: relative;
+    }
+
+    .content-item h4 {
+      margin: 0 0 5px 0;
+    }
+
+    .content-date {
+      color: #888;
+      font-size: 0.8em;
+      margin-bottom: 5px;
+    }
+
+    .content-list {
+      max-height: 350px;
+      overflow-y: auto;
+      margin: 10px 0;
+      border: 1px solid #eee;
+      padding: 5px;
+    }
+
+    #refresh-content {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Content Capture & Search</h2>
+
+  <div class="tab-buttons">
+    <button class="tab-btn active" data-tab="whitelist">Whitelist</button>
+    <button class="tab-btn" data-tab="search">Search</button>
+    <button class="tab-btn" data-tab="llm">LLM</button>
+    <button class="tab-btn" data-tab="settings">Settings</button>
+    <button class="tab-btn" data-tab="manage">Manage Content</button>
+  </div>
+
+  <div id="whitelist-tab" class="tab tab-active">
+    <h3>Domain Whitelist</h3>
+    <div>
+      <input type="text" id="new-domain" placeholder="example.com">
+      <button id="add-domain">Add</button>
+    </div>
+    <div class="domain-list" id="domain-list">
+      <!-- Domain list will be dynamically populated -->
+    </div>
+  </div>
+
+  <div id="search-tab" class="tab">
+    <h3>Semantic Search</h3>
+    <div>
+      <input type="text" id="search-query" placeholder="Enter your search query">
+      <button id="search-btn">Search</button>
+    </div>
+    <div class="search-results" id="search-results">
+      <!-- Search results will be dynamically populated -->
+    </div>
+  </div>
+
+  <div id="llm-tab" class="tab">
+    <h3>LLM Integration</h3>
+    <div class="search-with-llm">
+      <div>
+        <input type="text" id="llm-search-query" placeholder="Enter your search query">
+        <button id="llm-search-btn">Search & Generate</button>
+      </div>
+      <div class="llm-prompt-container">
+        <label for="llm-prompt">Custom Prompt (search results will be inserted):</label>
+        <textarea id="llm-prompt" rows="4" placeholder="Analyze the following information and provide insights:">Analyze the following information and provide insights:</textarea>
+      </div>
+      <div class="llm-model-selector">
+        <label>
+          <input type="radio" name="llm-provider" value="ollama" checked>
+          Ollama (local)
+        </label>
+        <label>
+          <input type="radio" name="llm-provider" value="gemini">
+          Gemini
+        </label>
+      </div>
+      <div id="llm-response-container" class="llm-response-container">
+        <div id="llm-response" class="llm-response"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="settings-tab" class="tab">
+    <h3>Settings</h3>
+    <div class="server-settings">
+      <label for="server-url">Server URL:</label>
+      <input type="text" id="server-url" placeholder="http://localhost:5000">
+    </div>
+
+    <h4>LLM Settings</h4>
+    <div class="llm-settings">
+      <div class="ollama-settings">
+        <h5>Ollama Settings</h5>
+        <label for="ollama-url">Ollama URL:</label>
+        <input type="text" id="ollama-url" placeholder="http://localhost:11434">
+        <label for="ollama-model">Model Name:</label>
+        <input type="text" id="ollama-model" placeholder="llama3">
+      </div>
+
+      <div class="gemini-settings">
+        <h5>Google Gemini Settings</h5>
+        <label for="gemini-api-key">API Key:</label>
+        <input type="password" id="gemini-api-key" placeholder="Your Gemini API key">
+        <label for="gemini-model">Model Name:</label>
+        <input type="text" id="gemini-model" placeholder="gemini-1.5-pro">
+      </div>
+    </div>
+
+    <button id="save-settings">Save</button>
+  </div>
+
+  <div id="manage-tab" class="tab">
+    <h3>Manage Stored Content</h3>
+    <div>
+      <button id="refresh-content">Refresh List</button>
+    </div>
+    <div class="content-list" id="content-list">
+      <!-- Content list will be dynamically populated -->
+      <p>Loading content...</p>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

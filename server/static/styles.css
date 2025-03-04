@@ -1,0 +1,147 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+header {
+    margin-bottom: 20px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+.controls {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.filter-group, .action-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    background-color: #4a6cf7;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+button:hover {
+    background-color: #3a5ce5;
+}
+
+button.secondary {
+    background-color: #6c757d;
+}
+
+button.secondary:hover {
+    background-color: #5a6268;
+}
+
+button.danger {
+    background-color: #dc3545;
+}
+
+button.danger:hover {
+    background-color: #c82333;
+}
+
+input[type="date"] {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.content-stats {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.content-list {
+    border: 1px solid #eee;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.content-item {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+}
+
+.content-item:last-child {
+    border-bottom: none;
+}
+
+.content-item:hover {
+    background-color: #f9f9f9;
+}
+
+.item-check {
+    margin-top: 5px;
+}
+
+.item-details {
+    flex-grow: 1;
+}
+
+.item-title {
+    font-weight: bold;
+    font-size: 1.1em;
+    margin-bottom: 5px;
+}
+
+.item-url {
+    color: #6c757d;
+    font-size: 0.85em;
+    margin-bottom: 5px;
+    word-break: break-all;
+}
+
+.item-date {
+    font-size: 0.85em;
+    color: #6c757d;
+    margin-bottom: 8px;
+}
+
+.item-preview {
+    background-color: #f8f9fa;
+    padding: 10px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    color: #495057;
+}
+
+.loading {
+    padding: 40px;
+    text-align: center;
+    color: #6c757d;
+}
+
+.no-items {
+    padding: 40px;
+    text-align: center;
+    color: #6c757d;
+}

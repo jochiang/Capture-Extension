@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content Management - Content Capture & Search</title>
+    <link rel="stylesheet" href="static/styles.css">
+</head>
+<body>
+    <header>
+        <h1>Content Management</h1>
+    </header>
+    
+    <div class="controls">
+        <div class="filter-group">
+            <label for="date-filter">Filter by date:</label>
+            <input type="date" id="date-from" placeholder="From">
+            <input type="date" id="date-to" placeholder="To">
+            <button id="apply-filter">Apply Filter</button>
+            <button id="clear-filter">Clear</button>
+        </div>
+        <div class="action-group">
+            <button id="select-all" class="secondary">Select All</button>
+            <button id="deselect-all" class="secondary">Deselect All</button>
+            <button id="delete-selected" class="danger">Delete Selected</button>
+        </div>
+    </div>
+    
+    <div class="content-stats">
+        <div id="total-items">Total items: <span>0</span></div>
+        <div id="selected-items">Selected: <span>0</span></div>
+    </div>
+    
+    <div id="content-list" class="content-list">
+        <div class="loading">Loading content...</div>
+    </div>
+    
+    <script src="static/main.js"></script>
+</body>
+</html>
